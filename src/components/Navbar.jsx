@@ -4,6 +4,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({
     websiteUrl: '',
     websiteName: '',
@@ -21,20 +23,22 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Services', href: '#services' },
-    { name: 'Case Studies', href: '#case-studies' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'About', href: '#about' },
-    { name: 'Our Team', href: '#teamsection' },
-    { name: 'FAQ', href: '#faq' }
+    { name: 'Home', href: '#home', icon: '🏠' },
+    { name: 'Services', href: '/services', icon: '⚡' },
+    { name: 'Portfolio', href: '/portfolio', icon: '💼' },
+    { name: 'About', href: '/about', icon: '👥' },
+    { name: 'Blog', href: '/blog', icon: '📝' },
+    { name: 'FAQ', href: '/faq', icon: '❓' },
+    { name: 'Testimonial', href: '/testimonial', icon: '⭐' }
   ];
 
   const handleSmoothScroll = (e, href) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -48,11 +52,9 @@ export default function Navbar() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can add your form submission logic
     console.log('Form submitted:', formData);
     setIsSubmitted(true);
     
-    // Reset form after 3 seconds and close popup
     setTimeout(() => {
       setIsSubmitted(false);
       setIsPopupOpen(false);
@@ -63,6 +65,16 @@ export default function Navbar() {
         phone: ''
       });
     }, 3000);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log('Search query:', searchQuery);
+      // Implement search functionality here
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
   };
 
   const openPopup = () => {
@@ -79,6 +91,15 @@ export default function Navbar() {
       email: '',
       phone: ''
     });
+  };
+
+  const openSearch = () => {
+    setIsSearchOpen(true);
+  };
+
+  const closeSearch = () => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
   };
 
   // Free Audit Popup Component
@@ -325,14 +346,6 @@ export default function Navbar() {
                     boxShadow: '0 8px 25px rgba(255, 215, 0, 0.4)',
                     fontFamily: "'Inter', sans-serif"
                   }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 12px 35px rgba(255, 215, 0, 0.6)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(255, 215, 0, 0.4)';
-                  }}
                 >
                   Submit for Free Audit
                 </button>
@@ -371,98 +384,229 @@ export default function Navbar() {
     );
   };
 
+  // Search Popup Component
+  const SearchPopup = () => {
+    if (!isSearchOpen) return null;
+
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000,
+        backdropFilter: 'blur(10px)'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(26, 29, 34, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%)',
+          borderRadius: '20px',
+          padding: '40px',
+          width: '90%',
+          maxWidth: '500px',
+          border: '2px solid rgba(255, 215, 0, 0.3)',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+          position: 'relative',
+          backdropFilter: 'blur(20px)'
+        }}>
+          {/* Close Button */}
+          <button
+            onClick={closeSearch}
+            style={{
+              position: 'absolute',
+              top: '15px',
+              right: '20px',
+              background: 'none',
+              border: 'none',
+              color: '#FFD700',
+              fontSize: '24px',
+              cursor: 'pointer',
+              padding: '5px',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+              e.target.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'none';
+              e.target.style.transform = 'scale(1)';
+            }}
+          >
+            ×
+          </button>
+
+          <h2 style={{
+            color: '#FFD700',
+            textAlign: 'center',
+            marginBottom: '30px',
+            fontSize: '28px',
+            fontWeight: '700',
+            fontFamily: "'Inter', sans-serif",
+            textShadow: '0 2px 10px rgba(255, 215, 0, 0.3)'
+          }}>
+            Search
+          </h2>
+          
+          <form onSubmit={handleSearchSubmit}>
+            <div style={{ marginBottom: '30px' }}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="What you're looking for..."
+                required
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  borderRadius: '12px',
+                  border: '2px solid rgba(255, 215, 0, 0.3)',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  color: 'white',
+                  fontSize: '18px',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(10px)',
+                  fontFamily: "'Inter', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#FFD700';
+                  e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.target.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+                  e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '15px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                color: '#1a1d22',
+                border: 'none',
+                fontSize: '18px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 8px 25px rgba(255, 215, 0, 0.4)',
+                fontFamily: "'Inter', sans-serif"
+              }}
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      {/* Desktop Layout - New Structural Design */}
+      {/* Desktop Layout - Full Width with Neon Glow */}
       <div className="hidden lg:block">
         <nav 
           className="fixed top-0 left-0 right-0 z-[999] transition-all duration-500"
           style={{
-            display: 'flex',
-            justifyContent: 'center',
             width: '100%',
             padding: '12px 0',
-            background: 'transparent'
+            background: 'transparent',
+            border: 'none'
           }}
         >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '12px 40px',
-              background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 29, 34, 0.9) 100%)',
+              padding: '12px 20px',
+              background: 'transparent',
               backdropFilter: 'blur(20px)',
               borderRadius: '25px',
-              width: '95%',
-              maxWidth: '1400px',
-              gap: '30px',
-              border: '1px solid rgba(255, 215, 0, 0.15)',
-              boxShadow: `
-                0 8px 32px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.5)
-              `,
+              width: '98%',
+              margin: '0 auto',
+              gap: '20px',
+              border: 'none',
+              boxShadow: 'none',
               position: 'relative',
               overflow: 'hidden',
             }}
           >
-            {/* Animated Background Elements */}
+            {/* Neon Border Effect */}
             <div style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              background: `
-                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.02) 0%, transparent 50%)
-              `,
-              zIndex: 0,
+              borderRadius: '25px',
+              border: '2px solid transparent',
+              background: 'linear-gradient(135deg, #FFD700, #FFA500, #FF8C00, #FFD700)',
+              backgroundSize: '400% 400%',
+              animation: 'gradientShift 3s ease infinite',
+              zIndex: -1,
+              opacity: 0.8,
+              filter: 'blur(1px)'
             }}></div>
 
-            {/* Mega Logo - Left Side with Enhanced 3D Effect */}
+            {/* Background Blur */}
+            <div style={{
+              position: 'absolute',
+              top: '2px',
+              left: '2px',
+              right: '2px',
+              bottom: '2px',
+              background: 'rgba(10, 10, 10, 0.85)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '23px',
+              zIndex: -1,
+            }}></div>
+
+            {/* Mega Logo - Left Side */}
             <div style={{ 
               flexShrink: 0, 
               background: 'transparent',
               position: 'relative',
               zIndex: 1,
-              transform: 'perspective(1000px) rotateY(-5deg)',
-              transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-              filter: 'drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7))',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'perspective(1000px) rotateY(-5deg) scale(1.1) translateY(-2px)';
-              e.currentTarget.style.filter = 'drop-shadow(0 12px 35px rgba(255, 215, 0, 0.3))';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'perspective(1000px) rotateY(-5deg) scale(1)';
-              e.currentTarget.style.filter = 'drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7))';
-            }}
-            >
+            }}>
               <a href="#home">
                 <img 
                   src="/src/assets/comp-logo.png"
                   alt="AdMark Digital Media"
-                  className="h-16 w-auto transition-all duration-500"
+                  className="h-16 w-auto"
                   style={{
                     filter: `
                       brightness(1.3) 
                       contrast(1.4) 
                       drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8))
-                      drop-shadow(0 0 20px rgba(255, 215, 0, 0.4))
+                      drop-shadow(0 0 20px rgba(255, 215, 0, 0.6))
                     `,
                   }}
                 />
               </a>
             </div>
 
-            {/* Navigation Links - Center with Glass Morphism Effect */}
+            {/* Navigation Links - Center with Icons */}
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               flex: 1,
-              gap: '4px',
+              gap: '8px',
               position: 'relative',
               zIndex: 1,
             }}>
@@ -471,7 +615,6 @@ export default function Navbar() {
                   key={index}
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className="transition-all duration-400"
                   style={{
                     color: 'rgba(255, 255, 255, 0.9)',
                     textDecoration: 'none',
@@ -480,42 +623,40 @@ export default function Navbar() {
                     fontWeight: '500',
                     padding: '10px 16px',
                     textAlign: 'center',
-                    display: 'inline-block',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
                     whiteSpace: 'nowrap',
                     borderRadius: '12px',
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
                     letterSpacing: '0.02em',
                     textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all 0.3s ease',
                     position: 'relative',
                     overflow: 'hidden',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 215, 0, 0.2)',
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.color = '#FFD700';
-                    e.target.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 193, 7, 0.1) 100%)';
-                    e.target.style.transform = 'translateY(-3px) scale(1.05)';
-                    e.target.style.boxShadow = `
-                      0 8px 25px rgba(255, 215, 0, 0.25),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.2)
-                    `;
-                    e.target.style.border = '1px solid rgba(255, 215, 0, 0.4)';
+                    e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+                    e.target.style.border = '1px solid rgba(255, 215, 0, 0.5)';
+                    e.target.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.3)';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.color = 'rgba(255, 255, 255, 0.9)';
                     e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-                    e.target.style.transform = 'translateY(0) scale(1)';
+                    e.target.style.border = '1px solid rgba(255, 215, 0, 0.2)';
                     e.target.style.boxShadow = 'none';
-                    e.target.style.border = '1px solid rgba(255, 255, 255, 0.1)';
                   }}
                 >
+                  <span style={{ fontSize: '1.1em' }}>{link.icon}</span>
                   {link.name}
                 </a>
               ))}
             </div>
 
-            {/* CTA Buttons - Right Side with Circular Animation */}
+            {/* CTA Buttons - Right Side */}
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -524,18 +665,46 @@ export default function Navbar() {
               position: 'relative',
               zIndex: 1,
             }}>
-              {/* Pricing Plan Button with Circular Border Animation */}
-              <a
-                href="#pricing"
-                onClick={(e) => handleSmoothScroll(e, '#pricing')}
-                className="transition-all duration-500"
+              {/* Search Button */}
+              <button
+                onClick={openSearch}
                 style={{
-                  padding: '12px 28px',
-                  borderRadius: '30px',
+                  padding: '10px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 215, 0, 0.3)',
+                  color: '#FFD700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.6)';
+                  e.target.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.3)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                <span style={{ fontSize: '1.2em' }}>🔍</span>
+              </button>
+
+              {/* Pricing Plan Button */}
+              <a
+                href="/pricing"
+                onClick={(e) => handleSmoothScroll(e, "/pricing")}
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: '20px',
                   fontWeight: '600',
                   fontSize: '0.9rem',
-                  background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 29, 34, 0.8) 100%)',
-                  border: '2px solid rgba(255, 215, 0, 0.3)',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 215, 0, 0.3)',
                   color: '#FFD700',
                   fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
                   display: 'inline-flex',
@@ -543,82 +712,37 @@ export default function Navbar() {
                   gap: '8px',
                   whiteSpace: 'nowrap',
                   textDecoration: 'none',
-                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.4)',
                   letterSpacing: '0.03em',
                   textShadow: '0 1px 3px rgba(0, 0, 0, 0.5)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  position: 'relative',
-                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-3px) scale(1.05)';
-                  e.target.style.background = 'linear-gradient(135deg, rgba(26, 29, 34, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%)';
-                  e.target.style.boxShadow = '0 12px 30px rgba(255, 215, 0, 0.2)';
-                  e.target.style.border = '2px solid rgba(255, 215, 0, 0.6)';
-                  e.target.style.color = '#FFF8DC';
+                  e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.6)';
+                  e.target.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.3)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0) scale(1)';
-                  e.target.style.background = 'linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 29, 34, 0.8) 100%)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
-                  e.target.style.border = '2px solid rgba(255, 215, 0, 0.3)';
-                  e.target.style.color = '#FFD700';
+                  e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.3)';
+                  e.target.style.boxShadow = 'none';
                 }}
               >
-                {/* Circular Animated Border */}
-                <div style={{
-                  position: 'absolute',
-                  top: '-3px',
-                  left: '-3px',
-                  right: '-3px',
-                  bottom: '-3px',
-                  borderRadius: '32px',
-                  background: 'conic-gradient(from 0deg, transparent, #FFD700, #FFA500, #FFD700, transparent)',
-                  zIndex: -1,
-                  animation: 'rotateBorder 3s linear infinite',
-                  opacity: 0.7,
-                }}></div>
-                
-                {/* Inner background to cover the rotating border */}
-                <div style={{
-                  position: 'absolute',
-                  top: '2px',
-                  left: '2px',
-                  right: '2px',
-                  bottom: '2px',
-                  borderRadius: '28px',
-                  background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 29, 34, 0.9) 100%)',
-                  zIndex: -1,
-                }}></div>
-
-                <span style={{ 
-                  fontSize: '1.4em',
-                  filter: 'drop-shadow(0 0 5px rgba(255, 215, 0, 0.8))',
-                  zIndex: 1,
-                  transform: 'scale(1.2)'
-                }}>
-                  💎
-                </span>
-                <span style={{ zIndex: 1 }}>Pricing Plan</span>
+                <span style={{ fontSize: '1.2em' }}>💎</span>
+                Pricing Plan
               </a>
 
-              {/* Free Audit Button - Premium Design */}
+              {/* Free Audit Button */}
               <button
                 onClick={openPopup}
-                className="transition-all duration-500"
                 style={{
-                  padding: '12px 30px',
-                  borderRadius: '30px',
+                  padding: '12px 24px',
+                  borderRadius: '20px',
                   fontWeight: '700',
                   fontSize: '0.9rem',
-                  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
                   color: '#1a1d22',
                   fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
-                  boxShadow: `
-                    0 8px 25px rgba(255, 215, 0, 0.5),
-                    inset 0 2px 0 rgba(255, 255, 255, 0.4),
-                    inset 0 -2px 0 rgba(0, 0, 0, 0.3)
-                  `,
+                  border: '1px solid rgba(255, 215, 0, 0.8)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
@@ -626,42 +750,20 @@ export default function Navbar() {
                   textDecoration: 'none',
                   letterSpacing: '0.03em',
                   textShadow: '0 1px 2px rgba(255, 255, 255, 0.4)',
-                  border: '2px solid rgba(255, 215, 0, 0.8)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  position: 'relative',
-                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
                   cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)',
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-3px) scale(1.05)';
-                  e.target.style.background = 'linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF6B00 100%)';
-                  e.target.style.boxShadow = `
-                    0 12px 35px rgba(255, 165, 0, 0.7),
-                    inset 0 2px 0 rgba(255, 255, 255, 0.5),
-                    inset 0 -2px 0 rgba(0, 0, 0, 0.4)
-                  `;
-                  e.target.style.color = '#000000';
-                  e.target.style.border = '2px solid rgba(255, 215, 0, 1)';
+                  e.target.style.background = 'linear-gradient(135deg, #FFA500 0%, #FF8C00 100%)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.6)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0) scale(1)';
-                  e.target.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)';
-                  e.target.style.boxShadow = `
-                    0 8px 25px rgba(255, 215, 0, 0.5),
-                    inset 0 2px 0 rgba(255, 255, 255, 0.4),
-                    inset 0 -2px 0 rgba(0, 0, 0, 0.3)
-                  `;
-                  e.target.style.color = '#1a1d22';
-                  e.target.style.border = '2px solid rgba(255, 215, 0, 0.8)';
+                  e.target.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.4)';
                 }}
               >
-                <span style={{ 
-                  fontSize: '1.4em',
-                  filter: 'drop-shadow(0 0 6px rgba(255, 0, 0, 0.6))',
-                  transform: 'scale(1.2)'
-                }}>
-                  🎯
-                </span>
+                <span style={{ fontSize: '1.2em' }}>🎯</span>
                 Free Audit
               </button>
             </div>
@@ -673,23 +775,21 @@ export default function Navbar() {
       <nav 
         className="lg:hidden fixed top-0 left-0 right-0 z-[999] transition-all duration-500"
         style={{
-          background: isScrolled 
-            ? 'linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(26, 29, 34, 0.95) 100%)' 
-            : 'linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 29, 34, 0.85) 100%)',
+          background: 'transparent',
           backdropFilter: 'blur(20px)',
-          boxShadow: isScrolled ? '0 8px 32px rgba(0,0,0,0.7)' : '0 4px 20px rgba(0,0,0,0.4)',
-          borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
+          borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
+          width: '100%',
+          border: 'none'
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between py-3">
+        <div className="px-4 sm:px-6" style={{ width: '100%' }}>
+          <div className="flex items-center justify-between py-3" style={{ width: '100%' }}>
             {/* Mobile Logo */}
             <a href="#home" className="block">
               <div style={{
                 background: 'transparent',
                 borderRadius: '10px',
                 padding: '4px',
-                filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6))',
               }}>
                 <img 
                   src="/src/assets/comp-logo.png"
@@ -700,6 +800,7 @@ export default function Navbar() {
                       brightness(1.3) 
                       contrast(1.4) 
                       drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7))
+                      drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))
                     `,
                   }}
                 />
@@ -713,11 +814,8 @@ export default function Navbar() {
               aria-label="Toggle menu"
               style={{
                 color: '#FFD700',
-                background: isMobileMenuOpen 
-                  ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 193, 7, 0.15) 100%)' 
-                  : 'rgba(255, 255, 255, 0.05)',
+                background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 215, 0, 0.3)',
-                boxShadow: isMobileMenuOpen ? '0 4px 15px rgba(255, 215, 0, 0.25)' : '0 2px 10px rgba(0, 0, 0, 0.3)',
                 backdropFilter: 'blur(10px)',
               }}
             >
@@ -745,9 +843,11 @@ export default function Navbar() {
           <div 
             className="shadow-2xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(26, 29, 34, 0.95) 100%)',
+              background: 'rgba(10, 10, 10, 0.95)',
               backdropFilter: 'blur(20px)',
               borderTop: '1px solid rgba(255, 215, 0, 0.2)',
+              borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
+              width: '100%'
             }}
           >
             <div className="px-4 pt-3 pb-6 space-y-3">
@@ -766,29 +866,60 @@ export default function Navbar() {
                     background: 'rgba(255, 255, 255, 0.05)',
                     fontSize: '1rem',
                     fontWeight: '500',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    textAlign: 'center',
+                    border: '1px solid rgba(255, 215, 0, 0.2)',
+                    textAlign: 'left',
                     backdropFilter: 'blur(10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.color = '#FFD700';
-                    e.target.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 193, 7, 0.1) 100%)';
+                    e.target.style.background = 'rgba(255, 215, 0, 0.1)';
                     e.target.style.border = '1px solid rgba(255, 215, 0, 0.4)';
-                    e.target.style.transform = 'translateX(8px)';
-                    e.target.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.color = 'rgba(255, 255, 255, 0.9)';
                     e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-                    e.target.style.border = '1px solid rgba(255, 255, 255, 0.1)';
-                    e.target.style.transform = 'translateX(0)';
-                    e.target.style.boxShadow = 'none';
+                    e.target.style.border = '1px solid rgba(255, 215, 0, 0.2)';
                   }}
                 >
+                  <span style={{ fontSize: '1.2em' }}>{link.icon}</span>
                   {link.name}
                 </a>
               ))}
               
+              {/* Mobile Search Button */}
+              <button
+                onClick={() => {
+                  openSearch();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full px-4 py-4 rounded-xl font-semibold transition-all duration-300"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  color: '#FFD700',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '1rem',
+                  border: '1px solid rgba(255, 215, 0, 0.3)',
+                  textAlign: 'left',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.6)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.target.style.border = '1px solid rgba(255, 215, 0, 0.3)';
+                }}
+              >
+                <span style={{ fontSize: '1.2em' }}>🔍</span>
+                Search
+              </button>
+
               {/* Mobile Free Audit Button */}
               <button
                 onClick={() => {
@@ -797,24 +928,21 @@ export default function Navbar() {
                 }}
                 className="block w-full px-4 py-4 rounded-xl font-bold transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
                   color: '#1a1d22',
                   fontFamily: "'Inter', sans-serif",
                   fontSize: '1rem',
-                  border: '2px solid rgba(255, 215, 0, 0.8)',
-                  boxShadow: '0 6px 20px rgba(255, 215, 0, 0.4)',
+                  border: '1px solid rgba(255, 215, 0, 0.8)',
+                  boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)',
                   marginTop: '10px',
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 10px 25px rgba(255, 215, 0, 0.6)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
                 }}
               >
-                🎯 Free Audit
+                <span style={{ fontSize: '1.2em' }}>🎯</span>
+                Free Audit
               </button>
             </div>
           </div>
@@ -824,14 +952,20 @@ export default function Navbar() {
       {/* Free Audit Popup */}
       <FreeAuditPopup />
 
-      {/* CSS for Circular Border Animation */}
+      {/* Search Popup */}
+      <SearchPopup />
+
+      {/* CSS for Animations */}
       <style jsx>{`
-        @keyframes rotateBorder {
+        @keyframes gradientShift {
           0% {
-            transform: rotate(0deg);
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
           }
           100% {
-            transform: rotate(360deg);
+            background-position: 0% 50%;
           }
         }
       `}</style>

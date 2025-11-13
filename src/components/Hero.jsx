@@ -48,10 +48,71 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ 
         background: '#0A0A0A',
-        paddingTop: '70px',
+        paddingTop: '80px', // Reduced top padding
         paddingBottom: '40px'
       }}
     >
+      {/* Bottom Corner Buttons - Updated Structure */}
+      <div className="fixed bottom-6 right-6 z-30 flex flex-col gap-3">
+        {/* Website Cost Calculator Button */}
+        <motion.button
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2"
+          style={{
+            background: 'rgba(63, 252, 16, 0.96)',
+            border: '2px solid rgba(147, 51, 234, 0.4)',
+            color: '#9333ea',
+            backdropFilter: 'blur(10px)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(147, 51, 234, 0.2)';
+            e.target.style.borderColor = '#9333ea';
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 8px 20px rgba(147, 51, 234, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(147, 51, 234, 0.1)';
+            e.target.style.borderColor = 'rgba(147, 51, 234, 0.4)';
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          💰 Website Cost Calculator
+        </motion.button>
+
+        {/* Make Your Custom Plan Button - Moved above calculator with dark background */}
+        <motion.button
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.9, duration: 0.5 }}
+          className="px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2"
+          style={{
+            background: 'rgba(247, 9, 9, 0.95)', // Dark background
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            color: '#FFFFFF', // Super light text
+            backdropFilter: 'blur(10px)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(30, 30, 30, 0.95)';
+            e.target.style.borderColor = 'rgba(255, 193, 7, 0.6)';
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 8px 20px rgba(255, 193, 7, 0.2)';
+            e.target.style.color = '#FFC107'; // Gold text on hover for better visibility
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(15, 15, 15, 0.95)';
+            e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+            e.target.style.color = '#FFFFFF'; // Back to white
+          }}
+        >
+          🛠️ Make Your Custom Plan
+        </motion.button>
+      </div>
+
       <div className="absolute inset-0">
         <div
           className="absolute w-80 h-80 rounded-full opacity-5 blur-3xl"
@@ -74,7 +135,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Added margin top */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

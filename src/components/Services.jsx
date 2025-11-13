@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 export default function Services() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    websiteUrl: '',
+    websiteName: '',
+    email: '',
+    phone: ''
+  });
+
   const services = [
     { 
       title: 'SEO Services',
@@ -34,6 +43,329 @@ export default function Services() {
       icon: '🎨'
     }
   ];
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    setIsSubmitted(true);
+    
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setIsPopupOpen(false);
+      setFormData({
+        websiteUrl: '',
+        websiteName: '',
+        email: '',
+        phone: ''
+      });
+    }, 3000);
+  };
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+    setIsSubmitted(false);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setIsSubmitted(false);
+    setFormData({
+      websiteUrl: '',
+      websiteName: '',
+      email: '',
+      phone: ''
+    });
+  };
+
+  // Free Audit Popup Component - Same as Navbar
+  const FreeAuditPopup = () => {
+    if (!isPopupOpen) return null;
+
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000,
+        backdropFilter: 'blur(10px)'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(26, 29, 34, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%)',
+          borderRadius: '20px',
+          padding: '40px',
+          width: '90%',
+          maxWidth: '500px',
+          border: '2px solid rgba(255, 215, 0, 0.3)',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+          position: 'relative',
+          backdropFilter: 'blur(20px)'
+        }}>
+          {/* Close Button */}
+          <button
+            onClick={closePopup}
+            style={{
+              position: 'absolute',
+              top: '15px',
+              right: '20px',
+              background: 'none',
+              border: 'none',
+              color: '#FFD700',
+              fontSize: '24px',
+              cursor: 'pointer',
+              padding: '5px',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 215, 0, 0.1)';
+              e.target.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'none';
+              e.target.style.transform = 'scale(1)';
+            }}
+          >
+            ×
+          </button>
+
+          {!isSubmitted ? (
+            <>
+              <h2 style={{
+                color: '#FFD700',
+                textAlign: 'center',
+                marginBottom: '30px',
+                fontSize: '28px',
+                fontWeight: '700',
+                fontFamily: "'Inter', sans-serif",
+                textShadow: '0 2px 10px rgba(255, 215, 0, 0.3)'
+              }}>
+                Free Website Audit
+              </h2>
+              
+              <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    marginBottom: '8px',
+                    fontWeight: '500',
+                    fontFamily: "'Inter', sans-serif"
+                  }}>
+                    Website URL *
+                  </label>
+                  <input
+                    type="url"
+                    name="websiteUrl"
+                    value={formData.websiteUrl}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '10px',
+                      border: '2px solid rgba(255, 215, 0, 0.3)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: 'white',
+                      fontSize: '16px',
+                      transition: 'all 0.3s ease',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#FFD700';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    marginBottom: '8px',
+                    fontWeight: '500',
+                    fontFamily: "'Inter', sans-serif"
+                  }}>
+                    Website Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="websiteName"
+                    value={formData.websiteName}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '10px',
+                      border: '2px solid rgba(255, 215, 0, 0.3)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: 'white',
+                      fontSize: '16px',
+                      transition: 'all 0.3s ease',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#FFD700';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    marginBottom: '8px',
+                    fontWeight: '500',
+                    fontFamily: "'Inter', sans-serif"
+                  }}>
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '10px',
+                      border: '2px solid rgba(255, 215, 0, 0.3)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: 'white',
+                      fontSize: '16px',
+                      transition: 'all 0.3s ease',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#FFD700';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '30px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    marginBottom: '8px',
+                    fontWeight: '500',
+                    fontFamily: "'Inter', sans-serif"
+                  }}>
+                    Phone Number (Optional)
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '10px',
+                      border: '2px solid rgba(255, 215, 0, 0.2)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: 'white',
+                      fontSize: '16px',
+                      transition: 'all 0.3s ease',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#FFD700';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(255, 215, 0, 0.2)';
+                      e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                    color: '#1a1d22',
+                    border: 'none',
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 8px 25px rgba(255, 215, 0, 0.4)',
+                    fontFamily: "'Inter', sans-serif"
+                  }}
+                >
+                  Submit for Free Audit
+                </button>
+              </form>
+            </>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+              <div style={{
+                fontSize: '60px',
+                marginBottom: '20px',
+                filter: 'drop-shadow(0 0 10px rgba(255, 215, 0, 0.5))'
+              }}>
+                ✅
+              </div>
+              <h3 style={{
+                color: '#FFD700',
+                fontSize: '24px',
+                marginBottom: '15px',
+                fontWeight: '700',
+                fontFamily: "'Inter', sans-serif"
+              }}>
+                Request Submitted Successfully!
+              </h3>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '16px',
+                lineHeight: '1.6',
+                fontFamily: "'Inter', sans-serif"
+              }}>
+                Your request for free audit report has been successfully submitted and your free audit report will soon be sent to your email inbox. Thank you!
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <section 
@@ -87,7 +419,7 @@ export default function Services() {
               className="group relative overflow-hidden transition-all duration-500"
               style={{
                 background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-                minHeight: '260px',
+                minHeight: '320px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -149,7 +481,7 @@ export default function Services() {
                   {service.title}
                 </h3>
                 <p 
-                  className="text-sm md:text-base mb-4 transition-colors duration-300"
+                  className="text-sm md:text-base mb-6 transition-colors duration-300"
                   style={{
                     color: 'rgba(212, 184, 150, 0.75)',
                     lineHeight: '1.6',
@@ -160,32 +492,85 @@ export default function Services() {
                 </p>
               </div>
 
-              {/* Animated Arrow Button */}
-              <a
-                href="#get-quote"
-                className="relative z-10 inline-flex items-center gap-2 font-bold text-sm transition-all duration-300 group/btn"
-                style={{
-                  color: '#D4B896',
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-              >
-                <span className="group-hover/btn:translate-x-1 transition-transform duration-300">
-                  Learn more
-                </span>
-                <motion.span 
-                  className="text-xl"
-                  animate={{
-                    x: [0, 5, 0]
+              {/* Buttons Container */}
+              <div className="relative z-10 flex flex-col gap-3">
+                {/* Learn More Button */}
+                <a
+                  href="/services"
+                  className="relative z-10 inline-flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 group/btn py-3 px-4 rounded-lg"
+                  style={{
+                    color: '#D4B896',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(212, 184, 150, 0.3)',
+                    fontFamily: "'Montserrat', sans-serif",
+                    textDecoration: 'none'
                   }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(212, 184, 150, 0.1)';
+                    e.target.style.border = '1px solid rgba(212, 184, 150, 0.6)';
+                    e.target.style.boxShadow = '0 0 15px rgba(212, 184, 150, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.target.style.border = '1px solid rgba(212, 184, 150, 0.3)';
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
-                  →
-                </motion.span>
-              </a>
+                  <span className="group-hover/btn:translate-x-1 transition-transform duration-300">
+                    Learn More
+                  </span>
+                  <motion.span 
+                    className="text-xl"
+                    animate={{
+                      x: [0, 5, 0]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    →
+                  </motion.span>
+                </a>
+
+                {/* Buy Now Button - Same as Navbar Free Audit Button */}
+                <button
+                  onClick={openPopup}
+                  className="relative z-10 inline-flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 group/buynow py-3 px-4 rounded-lg"
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: '20px',
+                    fontWeight: '700',
+                    fontSize: '0.9rem',
+                    background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+                    color: '#1a1d22',
+                    fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                    border: '1px solid rgba(255, 215, 0, 0.8)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    whiteSpace: 'nowrap',
+                    textDecoration: 'none',
+                    letterSpacing: '0.03em',
+                    textShadow: '0 1px 2px rgba(255, 255, 255, 0.4)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #FFA500 0%, #FF8C00 100%)';
+                    e.target.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+                    e.target.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.4)';
+                  }}
+                >
+                  <span style={{ fontSize: '1.2em' }}>🎯</span>
+                  Buy Now
+                </button>
+              </div>
 
               {/* Bottom Accent Line */}
               <div 
@@ -242,6 +627,9 @@ export default function Services() {
           </motion.a>
         </motion.div>
       </div>
+
+      {/* Free Audit Popup - Same as Navbar */}
+      <FreeAuditPopup />
 
       <style jsx>{`
         @keyframes shine {

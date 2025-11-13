@@ -112,7 +112,7 @@ export default function GetQuote() {
       id="get-quote" 
       className="relative py-20 md:py-32 px-4 overflow-hidden"
       style={{
-        background: 'linear-gradient(180deg, #0A0A0A 0%, #141414 50%, #0A0A0A 100%)'
+        background: 'linear-gradient(180deg, #c71919ff 0%, #141414 50%, #e9d7d7ff 100%)'
       }}
     >
       {/* Decorative Elements */}

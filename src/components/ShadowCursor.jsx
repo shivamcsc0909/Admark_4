@@ -1,14 +1,21 @@
 import { useEffect } from 'react';
-import initCursor from '../utils/useShadowCursor';
+import initShadowCursor from '../utils/useShadowCursor';
 
 const ShadowCursor = () => {
   useEffect(() => {
-    initCursor();
+    initShadowCursor();
   }, []);
 
   return (
-    <div className='fixed top-0 left-0 w-full h-screen z-[-1]'>
-      <canvas id="fluid" className='w-full h-full' />
+    <div className="fixed top-0 left-0 w-full h-full pointer-events-none">
+      <canvas 
+        id="shadow-cursor" 
+        className="w-full h-full"
+        style={{ 
+          display: 'block',
+          mixBlendMode: 'exclusion'
+        }}
+      />
     </div>
   );
 };
